@@ -10,10 +10,12 @@ int yylex(void);
 %union {
   char    strval[50];
   int     ival;
+  float   fval;
 }
 %token <strval> STRING
-%token <ival> VAR IGUAL EOL ASPA
-%left SOMA
+%token <ival> VAR IGUAL EOL ASPA VEZES DIV ABRE FECHA
+%token <fval> FLOAT 
+%left SOMA VEZES
 
 %%
 
@@ -31,6 +33,28 @@ EXPRESSAO:
         liberar_imagem(&I);
                           }
 
+    | STRING IGUAL STRING VEZES FLOAT {
+        printf("Abrindo imagem %s\n", $3);
+        imagem I = abrir_imagem($3);
+        brilho(&I,$5);
+        printf("Salvando imagem em %s\n", $1);  
+        salvar_imagem($1, &I);
+    }
+    
+    | STRING IGUAL STRING DIV FLOAT {
+        printf("Abrindo imagem %s\n", $3);
+        imagem I = abrir_imagem($3);
+        $5 = 1/$5;
+        brilho(&I,$5);
+        printf("Salvando imagem em %s\n", $1);  
+        salvar_imagem($1, &I);
+    }
+
+    | ABRE STRING FECHA {
+        printf("Abrindo imagem %s\n", $2);
+        imagem I = abrir_imagem($2);
+        valor_maximo(&I);
+    }
     ;
 
 %%

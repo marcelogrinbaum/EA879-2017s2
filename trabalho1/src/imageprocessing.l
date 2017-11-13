@@ -11,11 +11,26 @@ void yyerror(char *);
 
 %%
 
+([0-9]*[.])?[0-9]+ {
+  yylval.fval = atof(yytext);
+  printf("Achei um FLOAT %f\n", yylval.fval);
+  return FLOAT;
+}
+
+\[ {
+  printf("Abriu\n");
+  return ABRE;
+}
+
+\] {
+  printf("Fechou\n");
+  return FECHA;
+}
+
 [a-z]  {
         yylval.ival = yytext[0] - 'a';
         return VAR;
        }
-
 
 \" { return ASPA; }
 
@@ -31,6 +46,16 @@ void yyerror(char *);
 [=]     {
           return IGUAL;
         }
+
+[*] {
+  printf("Achei um VEZES\n");
+  return VEZES;
+}
+
+[/] {
+  printf("Achei um DIV\n");
+  return DIV;
+}
 
 \n   {
          return EOL;

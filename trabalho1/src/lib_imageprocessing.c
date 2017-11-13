@@ -1,6 +1,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "imageprocessing.h"
 
@@ -80,3 +81,42 @@ void salvar_imagem(char *nome_do_arquivo, imagem *I) {
   FreeImage_Save(FIF_JPEG, bitmapOut, nome_do_arquivo, JPEG_DEFAULT);
 }
 
+void brilho(imagem *I, float n){ 
+  printf("Multiplicando todods os pixels por %f\n", n);
+  for (int i=0; i<I->width; i++) {
+     for (int j=0; j<I->height; j++) {
+      int idx;
+      idx = i + (j*I->width);
+      I->r[idx] = I->r[idx]*n;
+      if (I->r[idx] > 255) {
+        I->r[idx] = 255;
+      }
+      I->g[idx] = I->g[idx]*n;
+      if (I->g[idx] > 255) {
+        I->g[idx] = 255;
+      }
+      I->b[idx] = I->b[idx]*n;
+      if (I->b[idx] > 255) {
+        I->b[idx] = 255;
+      }
+    }
+  }  
+}
+
+void valor_maximo(imagem *I){
+  printf("Calculando o valor máximo...\n");
+  double max = 0;
+  double norma = 0;
+  for (int i=0; i<I->width; i++) {
+     for (int j=0; j<I->height; j++) {
+      int idx;
+      idx = i + (j*I->width);
+
+      norma = sqrt(pow(I->r[idx],2)+pow(I->g[idx],2)+pow(I->b[idx],2)); 
+      
+      if(norma > max)
+        max = norma;
+    }
+  }
+  printf("O valor máximo é: %lf\n", norma);  
+}
