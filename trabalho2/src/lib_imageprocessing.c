@@ -119,7 +119,7 @@ void brilho_multithreads(imagem *I, float n){
 
   struct timeval rt0, rt1, drt;
 
-  pthread_t t1, t2, t3t ;
+  pthread_t t1, t2, t3;
     
   gettimeofday(&rt0, NULL);
 
