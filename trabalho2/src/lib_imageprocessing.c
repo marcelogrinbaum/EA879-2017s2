@@ -10,6 +10,14 @@
 #include <FreeImage.h>
 
 
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define RESET   "\x1b[0m"
+
 /*
 imagem abrir_imagem(char *nome_do_arquivo);
 void salvar_imagem(char *nome_do_arquivo);
@@ -84,7 +92,7 @@ void salvar_imagem(char *nome_do_arquivo, imagem *I) {
   FreeImage_Save(FIF_JPEG, bitmapOut, nome_do_arquivo, JPEG_DEFAULT);
 }
 
-void brilho(imagem *I, float n){ 
+void brilho_(imagem *I, float n){ 
 
   struct timeval rt0, rt1, drt;
   
@@ -112,7 +120,7 @@ void brilho(imagem *I, float n){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  printf("Tempo: %ld.%06ld segundos\n", drt.tv_sec, drt.tv_usec);
+  printf(RESET "Tempo: %ld.%06ld segundos\n", drt.tv_sec, drt.tv_usec);
 }
 
 void brilho_multithreads(imagem *I, float n){ 
@@ -199,7 +207,7 @@ void brilho_multithreads(imagem *I, float n){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  printf("Tempo: %ld.%06ld segundos\n", drt.tv_sec, drt.tv_usec);
+  printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
 }
 
 
