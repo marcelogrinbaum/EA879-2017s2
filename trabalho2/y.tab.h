@@ -46,30 +46,32 @@ extern int yydebug;
   enum yytokentype
   {
     STRING = 258,
-    VAR = 259,
-    IGUAL = 260,
-    EOL = 261,
-    ASPA = 262,
-    VEZES = 263,
-    DIV = 264,
-    ABRE = 265,
-    FECHA = 266,
-    FLOAT = 267,
-    SOMA = 268
+    THREAD = 259,
+    VAR = 260,
+    IGUAL = 261,
+    EOL = 262,
+    ASPA = 263,
+    VEZES = 264,
+    DIV = 265,
+    ABRE = 266,
+    FECHA = 267,
+    FLOAT = 268,
+    SOMA = 269
   };
 #endif
 /* Tokens.  */
 #define STRING 258
-#define VAR 259
-#define IGUAL 260
-#define EOL 261
-#define ASPA 262
-#define VEZES 263
-#define DIV 264
-#define ABRE 265
-#define FECHA 266
-#define FLOAT 267
-#define SOMA 268
+#define THREAD 259
+#define VAR 260
+#define IGUAL 261
+#define EOL 262
+#define ASPA 263
+#define VEZES 264
+#define DIV 265
+#define ABRE 266
+#define FECHA 267
+#define FLOAT 268
+#define SOMA 269
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -82,7 +84,7 @@ union YYSTYPE
   int     ival;
   float   fval;
 
-#line 86 "y.tab.h" /* yacc.c:1909  */
+#line 88 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

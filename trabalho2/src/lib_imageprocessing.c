@@ -4,6 +4,7 @@
 #include <math.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 #include "imageprocessing.h"
 
@@ -229,13 +230,17 @@ void brilho_multithreads(imagem *I, float n, int num_threads){
   //     }
 	 // }  
   //}
-  int args;
-  for(int i=0; i<num_threads; i++){
-    args = i;
-    pthread_create(&(t[i]), NULL, &linhas, &args); 
-  }
-  //pthread_create(&t1, NULL, linhas1, NULL);  
-  // pthread_create(&t2, NULL, linhas2, NULL);
+  
+  int args[8];
+  for(int i=0; i<num_threads; i++)
+    args[i] = i;
+  for(int i=0; i<num_threads; i++)
+    pthread_create(&(t[i]), NULL, linhas, &(args[i])); 
+  
+
+  // int a=0, b=1;
+  // pthread_create(&t[0], NULL, linhas, &a);  
+  // pthread_create(&t[1], NULL, linhas, &b);
   // //pthread_create(&t3, NULL, linhas3, NULL); 
   for(int i=0; i<num_threads; i++) 
     pthread_join(t[i], NULL);

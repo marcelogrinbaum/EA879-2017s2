@@ -57,6 +57,11 @@ void yyerror(char *);
   return DIV;
 }
 
+-m {
+  printf("Usando THREAD\n");
+  return THREAD;
+}
+
 \n   {
          return EOL;
        }
