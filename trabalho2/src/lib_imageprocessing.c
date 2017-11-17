@@ -92,7 +92,7 @@ void salvar_imagem(char *nome_do_arquivo, imagem *I) {
   FreeImage_Save(FIF_JPEG, bitmapOut, nome_do_arquivo, JPEG_DEFAULT);
 }
 
-void brilho_(imagem *I, float n){ 
+void brilho_colunas(imagem *I, float n){ 
 
   struct timeval rt0, rt1, drt;
   
@@ -120,24 +120,58 @@ void brilho_(imagem *I, float n){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  printf(RESET "Tempo: %ld.%06ld segundos\n", drt.tv_sec, drt.tv_usec);
+  printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
 }
 
-void brilho_multithreads(imagem *I, float n){ 
+void brilho_linhas(imagem *I, float n){ 
+
+  struct timeval rt0, rt1, drt;
+  
+  gettimeofday(&rt0, NULL);
+
+  printf("Multiplicando todods os pixels por %f\n", n);
+  for (int i=0; i<I->height; i++) {
+     for (int j=0; j<I->width; j++) {
+      int idx;
+
+      idx = j + (i*I->width);
+      I->r[idx] = I->r[idx]*n;
+      if (I->r[idx] > 255) {
+        I->r[idx] = 255;
+      }
+      I->g[idx] = I->g[idx]*n;
+      if (I->g[idx] > 255) {
+        I->g[idx] = 255;
+      }
+      I->b[idx] = I->b[idx]*n;
+      if (I->b[idx] > 255) {
+        I->b[idx] = 255;
+      }
+    }
+  }
+  gettimeofday(&rt1, NULL);
+    
+  timersub(&rt1, &rt0, &drt);  
+  printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
+}
+
+void brilho_multithreads(imagem *I, float n, int num_threads){ 
 
   struct timeval rt0, rt1, drt;
 
-  pthread_t t1, t2, t3;
+  pthread_t t[8];
     
   gettimeofday(&rt0, NULL);
 
   printf("Multiplicando todods os pixels por %f\n", n);
   
-  void* linhas1(void *arg) {
-     for (int i=0; i<(I->height)/3; i++) {
+  void* linhas(void *arg) {
+    int* num = (int*)arg;
+    int n_da_thread = (*num);
+     for (int i=(n_da_thread*((I->height)/num_threads)); i<((n_da_thread+1)*((I->height)/num_threads)); i++) {
        for (int j=0; j<I->width; j++) {
         int idx;
-        idx = i + (j*I->height);
+        idx = j + (i*I->width);
         I->r[idx] = I->r[idx]*n;
         if (I->r[idx] > 255) {
           I->r[idx] = 255;
@@ -154,55 +188,59 @@ void brilho_multithreads(imagem *I, float n){
 	 }  
   }
     
-  void* linhas2(void *arg) { 
-     for (int i=((I->height)/3)+1; i<2*(I->height)/3; i++) {
-       for (int j=0; j<I->width; j++) {
-        int idx;
-        idx = i + (j*I->height);
-        I->r[idx] = I->r[idx]*n;
-        if (I->r[idx] > 255) {
-          I->r[idx] = 255;
-        }
-        I->g[idx] = I->g[idx]*n;
-        if (I->g[idx] > 255) {
-          I->g[idx] = 255;
-        }
-        I->b[idx] = I->b[idx]*n;
-        if (I->b[idx] > 255) {
-          I->b[idx] = 255;
-        }
-      }
-	 }  
+  // void* linhas2(void *arg) { 
+  //    for (int i=((I->height)/3); i<2*(I->height)/3; i++) {
+  //      for (int j=0; j<I->width; j++) {
+  //       int idx;
+  //       idx = j + (i*I->width);
+  //       I->r[idx] = I->r[idx]*n;
+  //       if (I->r[idx] > 255) {
+  //         I->r[idx] = 255;
+  //       }
+  //       I->g[idx] = I->g[idx]*n;
+  //       if (I->g[idx] > 255) {
+  //         I->g[idx] = 255;
+  //       }
+  //       I->b[idx] = I->b[idx]*n;
+  //       if (I->b[idx] > 255) {
+  //         I->b[idx] = 255;
+  //       }
+  //     }
+	 // }  
+  // }
+
+  //  void* linhas3(void *arg) {
+  //    for (int i=(2*(I->height)/3)+1; i<I->height; i++) {
+  //      for (int j=0; j<I->width; j++) {
+  //       int idx;
+  //       idx = j + (i*I->width);
+  //       I->r[idx] = I->r[idx]*n;
+  //       if (I->r[idx] > 255) {
+  //         I->r[idx] = 255;
+  //       }
+  //       I->g[idx] = I->g[idx]*n;
+  //       if (I->g[idx] > 255) {
+  //         I->g[idx] = 255;
+  //       }
+  //       I->b[idx] = I->b[idx]*n;
+  //       if (I->b[idx] > 255) {
+  //         I->b[idx] = 255;
+  //       }
+  //     }
+	 // }  
+  //}
+  int args;
+  for(int i=0; i<num_threads; i++){
+    args = i;
+    pthread_create(&(t[i]), NULL, &linhas, &args); 
   }
-
-   void* linhas3(void *arg) {
-     for (int i=(2*(I->height)/3)+1; i<I->height; i++) {
-       for (int j=0; j<I->width; j++) {
-        int idx;
-        idx = i + (j*I->height);
-        I->r[idx] = I->r[idx]*n;
-        if (I->r[idx] > 255) {
-          I->r[idx] = 255;
-        }
-        I->g[idx] = I->g[idx]*n;
-        if (I->g[idx] > 255) {
-          I->g[idx] = 255;
-        }
-        I->b[idx] = I->b[idx]*n;
-        if (I->b[idx] > 255) {
-          I->b[idx] = 255;
-        }
-      }
-	 }  
-  }
-
-
-  pthread_create(&t1, NULL, linhas1, NULL);  
-  pthread_create(&t2, NULL, linhas2, NULL);
-  pthread_create(&t3, NULL, linhas3, NULL); 
-  pthread_join (t1, NULL);
-  pthread_join (t2, NULL);  
-  pthread_join (t3, NULL);  
+  //pthread_create(&t1, NULL, linhas1, NULL);  
+  // pthread_create(&t2, NULL, linhas2, NULL);
+  // //pthread_create(&t3, NULL, linhas3, NULL); 
+  for(int i=0; i<num_threads; i++) 
+    pthread_join(t[i], NULL);
+  // pthread_join (t2, NULL);  
+  // //pthread_join (t3, NULL);  
 
   gettimeofday(&rt1, NULL);
     

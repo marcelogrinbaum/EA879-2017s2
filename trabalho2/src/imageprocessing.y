@@ -31,12 +31,12 @@ EXPRESSAO:
         printf("Li imagem %d por %d\n", I.width, I.height);
         salvar_imagem($1, &I);
         liberar_imagem(&I);
-                          }
+    }
 
     | STRING IGUAL STRING VEZES FLOAT {
         printf("Abrindo imagem %s\n", $3);
         imagem I = abrir_imagem($3);
-        brilho_multithreads(&I,$5);
+        brilho_multithreads(&I,$5,2);
         printf("Salvando imagem em %s\n", $1);  
         salvar_imagem($1, &I);
     }
@@ -45,7 +45,7 @@ EXPRESSAO:
         printf("Abrindo imagem %s\n", $3);
         imagem I = abrir_imagem($3);
         $5 = 1/$5;
-        brilho_multithreads(&I,$5);
+        brilho_colunas(&I,$5);
         printf("Salvando imagem em %s\n", $1);  
         salvar_imagem($1, &I);
     }
