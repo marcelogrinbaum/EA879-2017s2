@@ -115,6 +115,14 @@ void yyerror(char *s) {
 }
 
 int main() {
+  printf("INSTRUÇÕES\n");
+  printf("Adicionar os singuintes indicadores após a instrução do brilho:\n");
+  printf("-t n para n threads\n");
+  printf("-p n para n processos\n");
+  printf("-l para varrer a imagem por linhs\n");
+  printf("-c para varrer a imagem por colunas\n");
+  printf("EXEMPLO: teste.jpg=demo.jpg*2 -p 2 para utilizar dois processos\n");
+
   FreeImage_Initialise(0);
   yyparse();
   return 0;
