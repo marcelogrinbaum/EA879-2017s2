@@ -5,9 +5,10 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
-
+#include <sys/types.h>
+#include <sys/wait.h>
 #include "imageprocessing.h"
-
+#include <sys/mman.h>
 #include <FreeImage.h>
 
 
@@ -188,62 +189,18 @@ void brilho_multithreads(imagem *I, float n, int num_threads){
       }
 	 }  
   }
-    
-  // void* linhas2(void *arg) { 
-  //    for (int i=((I->height)/3); i<2*(I->height)/3; i++) {
-  //      for (int j=0; j<I->width; j++) {
-  //       int idx;
-  //       idx = j + (i*I->width);
-  //       I->r[idx] = I->r[idx]*n;
-  //       if (I->r[idx] > 255) {
-  //         I->r[idx] = 255;
-  //       }
-  //       I->g[idx] = I->g[idx]*n;
-  //       if (I->g[idx] > 255) {
-  //         I->g[idx] = 255;
-  //       }
-  //       I->b[idx] = I->b[idx]*n;
-  //       if (I->b[idx] > 255) {
-  //         I->b[idx] = 255;
-  //       }
-  //     }
-	 // }  
-  // }
-
-  //  void* linhas3(void *arg) {
-  //    for (int i=(2*(I->height)/3)+1; i<I->height; i++) {
-  //      for (int j=0; j<I->width; j++) {
-  //       int idx;
-  //       idx = j + (i*I->width);
-  //       I->r[idx] = I->r[idx]*n;
-  //       if (I->r[idx] > 255) {
-  //         I->r[idx] = 255;
-  //       }
-  //       I->g[idx] = I->g[idx]*n;
-  //       if (I->g[idx] > 255) {
-  //         I->g[idx] = 255;
-  //       }
-  //       I->b[idx] = I->b[idx]*n;
-  //       if (I->b[idx] > 255) {
-  //         I->b[idx] = 255;
-  //       }
-  //     }
-	 // }  
-  //}
   
   int args[8];
   for(int i=0; i<num_threads; i++)
     args[i] = i;
   for(int i=0; i<num_threads; i++)
     pthread_create(&(t[i]), NULL, linhas, &(args[i])); 
-  
-
+  for(int i=0; i<num_threads; i++) 
+    pthread_join(t[i], NULL);
   // int a=0, b=1;
   // pthread_create(&t[0], NULL, linhas, &a);  
   // pthread_create(&t[1], NULL, linhas, &b);
   // //pthread_create(&t3, NULL, linhas3, NULL); 
-  for(int i=0; i<num_threads; i++) 
-    pthread_join(t[i], NULL);
   // pthread_join (t2, NULL);  
   // //pthread_join (t3, NULL);  
 
@@ -253,6 +210,84 @@ void brilho_multithreads(imagem *I, float n, int num_threads){
   printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
 }
 
+void brilho_multiprocessos(imagem *I, float n, int num_processos){
+
+  int protection = PROT_READ | PROT_WRITE;
+  int visibility = MAP_SHARED | MAP_ANONYMOUS;
+  float *r = (float*) mmap(NULL, sizeof(float)*(I->height)*(I->width), protection, visibility, 0, 0);
+  float *g = (float*) mmap(NULL, sizeof(float)*(I->height)*(I->width), protection, visibility, 0, 0);
+  float *b = (float*) mmap(NULL, sizeof(float)*(I->height)*(I->width), protection, visibility, 0, 0);
+
+  void linhas(int n_do_processo) {
+     for (int i=(n_do_processo*((I->height)/num_processos)); i<((n_do_processo+1)*((I->height)/num_processos)); i++) {
+       for (int j=0; j<I->width; j++) {
+        int idx;
+        idx = j + (i*I->width);
+        r[idx] = I->r[idx]*n;
+        if (r[idx] > 255) {
+          r[idx] = 255;
+        }
+        g[idx] = I->g[idx]*n;
+        if (g[idx] > 255) {
+          g[idx] = 255;
+        }
+        b[idx] = I->b[idx]*n;
+        if (b[idx] > 255) {
+          b[idx] = 255;
+        }
+      }
+    }  
+  }
+
+  struct timeval rt0, rt1, drt;
+    
+  gettimeofday(&rt0, NULL);
+
+  pid_t *pids = malloc(sizeof(pid_t)*num_processos);
+  int *args = malloc(sizeof(int)*num_processos);;
+  // for(int i=0; i<num_processos; i++)
+  //   args[i] = i;
+  for (int i=0; i<num_processos; i++){
+    pids[i] = fork();
+    if (pids[i] < 0){
+      printf("Erro ao fazer fork\n");
+      exit(EXIT_FAILURE);
+    }else if (pids[i] == 0){ //Processo filho
+      linhas(i);            
+      exit (EXIT_SUCCESS);
+    }
+  }  
+
+  int status;
+  pid_t pid;
+  int k=0;
+  while (k < num_processos) {
+    pid = wait(&status);
+    k++;  // TODO(pts): Remove pid from the pids array.
+  }
+
+  int x, y, idx;
+
+  for (y=0; y<I->height; y++){
+    for (x=0; x<I->width; x++){
+      idx = x + y*(I->width);
+      I->r[idx] = r[idx];
+      I->g[idx] = g[idx];
+      I->b[idx] = b[idx];
+    }
+  }
+
+  free (pids);
+  munmap (r, sizeof(float)*(I->height)*(I->width));
+  munmap (g, sizeof(float)*(I->height)*(I->width));
+  munmap (b, sizeof(float)*(I->height)*(I->width));  
+
+  gettimeofday(&rt1, NULL);
+    
+  timersub(&rt1, &rt0, &drt);  
+  printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
+
+}
 
 void valor_maximo(imagem *I){
   printf("Calculando o valor máximo...\n");

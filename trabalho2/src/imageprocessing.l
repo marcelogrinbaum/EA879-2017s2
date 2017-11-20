@@ -57,9 +57,24 @@ void yyerror(char *);
   return DIV;
 }
 
--m {
+-t {
   printf("Usando THREAD\n");
   return THREAD;
+}
+
+-p {
+  printf("Usando MULTIPROCESSOS\n");
+  return PROCESSO;
+}
+
+-c {
+  printf("Por colunas\n");
+  return COL;
+}
+
+-l {
+  printf("Por linhas\n");
+  return LIN;
 }
 
 \n   {
