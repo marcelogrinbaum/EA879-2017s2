@@ -116,10 +116,16 @@ EXPRESSAO:
     }
 
     | TESTE FLOAT {
-		  printf("Imagem grande:\n");    	  
-    	  teste("demo.jpg", $2);
-    	  
-    
+	  printf(RED "Imagem gigante 8000x4907:\n" RESET);    	  
+	  teste("gigante.jpg", $2);
+    	  printf( RED "Imagem grande 2592x1944:\n" RESET);
+	  teste("demo.jpg", $2);
+	  printf(RED "Imagem media 1024x679:\n" RESET);
+	  teste("media.jpg", $2);
+	  printf(RED "Imagem pequena 236x236:\n" RESET);
+	  teste("pikachu.jpg", $2);
+
+
     }
     
     

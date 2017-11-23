@@ -34,11 +34,11 @@ imagem abrir_imagem(char *nome_do_arquivo) {
 
   bitmapIn = FreeImage_Load(FIF_JPEG, nome_do_arquivo, 0);
 
-  if (bitmapIn == 0) {
-    printf("Erro! Nao achei arquivo - %s\n", nome_do_arquivo);
-  } else {
-    printf("Arquivo lido corretamente!\n");
-   }
+//  if (bitmapIn == 0) {
+//    printf("Erro! Nao achei arquivo - %s\n", nome_do_arquivo);
+//  } else {
+ //   printf("Arquivo lido corretamente!\n");
+  // }
 
   x = FreeImage_GetWidth(bitmapIn);
   y = FreeImage_GetHeight(bitmapIn);

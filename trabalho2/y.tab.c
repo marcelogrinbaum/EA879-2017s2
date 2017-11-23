@@ -1381,16 +1381,22 @@ yyreduce:
   case 15:
 #line 118 "./src/imageprocessing.y" /* yacc.c:1646  */
     {
-		  printf("Imagem grande:\n");    	  
-    	  teste("demo.jpg", (yyvsp[0].fval));
-    	  
-    
+	  printf(RED "Imagem gigante 8000x4907:\n" RESET);    	  
+	  teste("gigante.jpg", (yyvsp[0].fval));
+    	  printf( RED "Imagem grande 2592x1944:\n" RESET);
+	  teste("demo.jpg", (yyvsp[0].fval));
+	  printf(RED "Imagem media 1024x679:\n" RESET);
+	  teste("media.jpg", (yyvsp[0].fval));
+	  printf(RED "Imagem pequena 236x236:\n" RESET);
+	  teste("pikachu.jpg", (yyvsp[0].fval));
+
+
     }
-#line 1390 "y.tab.c" /* yacc.c:1646  */
+#line 1396 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1394 "y.tab.c" /* yacc.c:1646  */
+#line 1400 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1618,7 +1624,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 128 "./src/imageprocessing.y" /* yacc.c:1906  */
+#line 134 "./src/imageprocessing.y" /* yacc.c:1906  */
 
 
 void yyerror(char *s) {
