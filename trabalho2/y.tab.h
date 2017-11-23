@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -50,16 +50,17 @@ extern int yydebug;
     PROCESSO = 260,
     COL = 261,
     LIN = 262,
-    VAR = 263,
-    IGUAL = 264,
-    EOL = 265,
-    ASPA = 266,
-    VEZES = 267,
-    DIV = 268,
-    ABRE = 269,
-    FECHA = 270,
-    FLOAT = 271,
-    SOMA = 272
+    TESTE = 263,
+    VAR = 264,
+    IGUAL = 265,
+    EOL = 266,
+    ASPA = 267,
+    VEZES = 268,
+    DIV = 269,
+    ABRE = 270,
+    FECHA = 271,
+    FLOAT = 272,
+    SOMA = 273
   };
 #endif
 /* Tokens.  */
@@ -68,32 +69,31 @@ extern int yydebug;
 #define PROCESSO 260
 #define COL 261
 #define LIN 262
-#define VAR 263
-#define IGUAL 264
-#define EOL 265
-#define ASPA 266
-#define VEZES 267
-#define DIV 268
-#define ABRE 269
-#define FECHA 270
-#define FLOAT 271
-#define SOMA 272
+#define TESTE 263
+#define VAR 264
+#define IGUAL 265
+#define EOL 266
+#define ASPA 267
+#define VEZES 268
+#define DIV 269
+#define ABRE 270
+#define FECHA 271
+#define FLOAT 272
+#define SOMA 273
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
+typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 10 "./src/imageprocessing.y" /* yacc.c:1909  */
+#line 18 "./src/imageprocessing.y" /* yacc.c:1909  */
 
   char    strval[50];
   int     ival;
   float   fval;
 
-#line 94 "y.tab.h" /* yacc.c:1909  */
+#line 96 "y.tab.h" /* yacc.c:1909  */
 };
-
-typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

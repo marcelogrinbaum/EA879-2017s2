@@ -94,13 +94,13 @@ void salvar_imagem(char *nome_do_arquivo, imagem *I) {
   FreeImage_Save(FIF_JPEG, bitmapOut, nome_do_arquivo, JPEG_DEFAULT);
 }
 
-void brilho_colunas(imagem *I, float n){ 
+int brilho_colunas(imagem *I, float n){ 
 
   struct timeval rt0, rt1, drt;
   
   gettimeofday(&rt0, NULL);
 
-  printf("Multiplicando todods os pixels por %f\n", n);
+  //printf("Multiplicando todods os pixels por %f\n", n);
   for (int i=0; i<I->width; i++) {
      for (int j=0; j<I->height; j++) {
       int idx;
@@ -122,16 +122,17 @@ void brilho_colunas(imagem *I, float n){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
+  //printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
+  return drt.tv_usec;
 }
 
-void brilho_linhas(imagem *I, float n){ 
+int brilho_linhas(imagem *I, float n){ 
 
   struct timeval rt0, rt1, drt;
   
   gettimeofday(&rt0, NULL);
 
-  printf("Multiplicando todods os pixels por %f\n", n);
+  //printf("Multiplicando todods os pixels por %f\n", n);
   for (int i=0; i<I->height; i++) {
      for (int j=0; j<I->width; j++) {
       int idx;
@@ -154,10 +155,11 @@ void brilho_linhas(imagem *I, float n){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
+  //printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
+  return drt.tv_usec;
 }
 
-void brilho_multithreads(imagem *I, float n, int num_threads){ 
+int brilho_multithreads(imagem *I, float n, int num_threads){ 
 
   struct timeval rt0, rt1, drt;
 
@@ -165,7 +167,7 @@ void brilho_multithreads(imagem *I, float n, int num_threads){
     
   gettimeofday(&rt0, NULL);
 
-  printf("Multiplicando todods os pixels por %f\n", n);
+  //printf("Multiplicando todods os pixels por %f\n", n);
   
   void* linhas(void *arg) {
     int* num = (int*)arg;
@@ -207,10 +209,11 @@ void brilho_multithreads(imagem *I, float n, int num_threads){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
+  //printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
+  return drt.tv_usec;
 }
 
-void brilho_multiprocessos(imagem *I, float n, int num_processos){
+int brilho_multiprocessos(imagem *I, float n, int num_processos){
 
   int protection = PROT_READ | PROT_WRITE;
   int visibility = MAP_SHARED | MAP_ANONYMOUS;
@@ -263,7 +266,7 @@ void brilho_multiprocessos(imagem *I, float n, int num_processos){
   int k=0;
   while (k < num_processos) {
     pid = wait(&status);
-    k++;  // TODO(pts): Remove pid from the pids array.
+    k++; 
   }
 
   int x, y, idx;
@@ -285,8 +288,8 @@ void brilho_multiprocessos(imagem *I, float n, int num_processos){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
-
+  //printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
+  return drt.tv_usec;
 }
 
 void valor_maximo(imagem *I){

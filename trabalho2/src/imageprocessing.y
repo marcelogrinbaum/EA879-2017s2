@@ -3,6 +3,14 @@
 #include "imageprocessing.h"
 #include <FreeImage.h>
 
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define RESET   "\x1b[0m"
+
 void yyerror(char *c);
 int yylex(void);
 
@@ -12,7 +20,7 @@ int yylex(void);
   int     ival;
   float   fval;
 }
-%token <strval> STRING THREAD PROCESSO COL LIN
+%token <strval> STRING THREAD PROCESSO COL LIN TESTE
 %token <ival> VAR IGUAL EOL ASPA VEZES DIV ABRE FECHA 
 %token <fval> FLOAT 
 %left SOMA VEZES
@@ -106,6 +114,65 @@ EXPRESSAO:
         imagem I = abrir_imagem($2);
         valor_maximo(&I);
     }
+
+    | TESTE {
+		
+		imagem I = abrir_imagem("demo.jpg");
+		int media = 0;  		
+  		printf("Colunas:\n");
+  		for(int i=0; i<10;i++){
+    		media += brilho_colunas(&I,2);
+  		}
+		media=media/10; 		
+		if(media<100000) 		
+ 			printf(CYAN "Média colunas: 0.0%d\n" RESET,media);
+		else
+			printf(CYAN "Média colunas: 0.%d\n" RESET,media);		
+  		
+  		
+  	   media = 0;
+  		I = abrir_imagem("demo.jpg");
+  		printf("Linhas:\n");
+  		for(int i=0; i<10;i++){
+    		media += brilho_linhas(&I,2);
+  		}
+  		media=media/10; 		
+		if(media<100000) 		
+ 			printf(CYAN "Média linhas: 0.0%d\n" RESET,media);
+		else
+			printf(CYAN "Média linhas: 0.%d\n" RESET,media);
+ 		
+ 		
+  		I = abrir_imagem("demo.jpg");
+  		printf("Threads:\n");
+  		for(int i=1; i<9;i++){
+  			media=0;
+    		printf("Número de threads: %d\n", i);
+    		for(int j=0; j<10; j++)
+      		media += brilho_multithreads(&I,2,i);
+      	media=media/10; 		
+			if(media<100000) 			
+ 				printf(CYAN "Média usando %d threads: 0.0%d\n" RESET,i,media);
+ 			else
+ 				printf(CYAN "Média usando %d threads: 0.%d\n" RESET,i,media);
+  		}
+  
+  		I = abrir_imagem("demo.jpg");
+  		printf("Processos:\n");
+  		for(int i=1; i<9;i++){
+  			media=0;
+    		printf("Número de processos: %d\n", i);
+    		for(int j=0; j<10; j++)
+      		media += brilho_multiprocessos(&I,2,i);
+        	media=media/10; 		
+			if(media<100000) 			
+ 				printf(CYAN "Média usando %d processos: 0.0%d\n" RESET,i,media);
+ 			else
+ 				printf(CYAN "Média usando %d processos: 0.%d\n" RESET,i,media);
+  		}    
+    }
+    
+    
     ;
 
 %%
