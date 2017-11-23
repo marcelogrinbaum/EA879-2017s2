@@ -419,7 +419,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   27
+#define YYLAST   26
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  19
@@ -428,7 +428,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  15
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  28
+#define YYNSTATES  29
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -516,9 +516,9 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-     -13,     0,   -13,    -6,   -13,     2,    -5,     4,    -3,   -13,
-     -12,   -13,     3,     6,     5,    12,     7,     8,   -13,   -13,
-       9,    10,   -13,   -13,   -13,   -13,   -13,   -13
+     -13,     0,   -13,    -6,   -11,     2,    -4,    10,   -13,    -2,
+     -13,   -12,   -13,     3,     4,     5,    12,     6,     7,   -13,
+     -13,     8,     9,   -13,   -13,   -13,   -13,   -13,   -13
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -526,9 +526,9 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       3,     4,     1,     0,    15,     0,     0,     0,     0,     2,
-       5,    14,     0,     0,     0,     0,     0,     0,     6,     7,
-       0,     0,    10,    11,     8,     9,    12,    13
+       3,     4,     1,     0,     0,     0,     0,     0,    15,     0,
+       2,     5,    14,     0,     0,     0,     0,     0,     0,     6,
+       7,     0,     0,    10,    11,     8,     9,    12,    13
 };
 
   /* YYPGOTO[NTERM-NUM].  */
@@ -548,25 +548,25 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-       2,    12,    13,     3,     7,     8,     9,    10,     4,    16,
-      17,    18,    19,    11,     0,     5,    20,    21,    22,    23,
-      14,     0,     0,    15,    24,    25,    26,    27
+       2,    13,    14,     3,     7,     9,     8,    10,     4,    17,
+      18,    19,    20,    11,    12,     5,    21,    22,    23,    24,
+      15,    16,     0,    25,    26,    27,    28
 };
 
 static const yytype_int8 yycheck[] =
 {
-       0,    13,    14,     3,    10,     3,    11,     3,     8,     4,
-       5,     6,     7,    16,    -1,    15,     4,     5,     6,     7,
-      17,    -1,    -1,    17,    17,    17,    17,    17
+       0,    13,    14,     3,    10,     3,    17,    11,     8,     4,
+       5,     6,     7,     3,    16,    15,     4,     5,     6,     7,
+      17,    17,    -1,    17,    17,    17,    17
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    20,     0,     3,     8,    15,    21,    10,     3,    11,
-       3,    16,    13,    14,    17,    17,     4,     5,     6,     7,
-       4,     5,     6,     7,    17,    17,    17,    17
+       0,    20,     0,     3,     8,    15,    21,    10,    17,     3,
+      11,     3,    16,    13,    14,    17,    17,     4,     5,     6,
+       7,     4,     5,     6,     7,    17,    17,    17,    17
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -580,7 +580,7 @@ static const yytype_uint8 yyr1[] =
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     3,     0,     0,     3,     6,     6,     7,     7,
-       6,     6,     7,     7,     3,     1
+       6,     6,     7,     7,     3,     2
 };
 
 
@@ -1381,66 +1381,16 @@ yyreduce:
   case 15:
 #line 118 "./src/imageprocessing.y" /* yacc.c:1646  */
     {
-		
-		imagem I = abrir_imagem("demo.jpg");
-		int media = 0;  		
-  		printf("Colunas:\n");
-  		for(int i=0; i<10;i++){
-    		media += brilho_colunas(&I,2);
-  		}
-		media=media/10; 		
-		if(media<100000) 		
- 			printf(CYAN "Média colunas: 0.0%d\n" RESET,media);
-		else
-			printf(CYAN "Média colunas: 0.%d\n" RESET,media);		
-  		
-  		
-  	   media = 0;
-  		I = abrir_imagem("demo.jpg");
-  		printf("Linhas:\n");
-  		for(int i=0; i<10;i++){
-    		media += brilho_linhas(&I,2);
-  		}
-  		media=media/10; 		
-		if(media<100000) 		
- 			printf(CYAN "Média linhas: 0.0%d\n" RESET,media);
-		else
-			printf(CYAN "Média linhas: 0.%d\n" RESET,media);
- 		
- 		
-  		I = abrir_imagem("demo.jpg");
-  		printf("Threads:\n");
-  		for(int i=1; i<9;i++){
-  			media=0;
-    		printf("Número de threads: %d\n", i);
-    		for(int j=0; j<10; j++)
-      		media += brilho_multithreads(&I,2,i);
-      	media=media/10; 		
-			if(media<100000) 			
- 				printf(CYAN "Média usando %d threads: 0.0%d\n" RESET,i,media);
- 			else
- 				printf(CYAN "Média usando %d threads: 0.%d\n" RESET,i,media);
-  		}
-  
-  		I = abrir_imagem("demo.jpg");
-  		printf("Processos:\n");
-  		for(int i=1; i<9;i++){
-  			media=0;
-    		printf("Número de processos: %d\n", i);
-    		for(int j=0; j<10; j++)
-      		media += brilho_multiprocessos(&I,2,i);
-        	media=media/10; 		
-			if(media<100000) 			
- 				printf(CYAN "Média usando %d processos: 0.0%d\n" RESET,i,media);
- 			else
- 				printf(CYAN "Média usando %d processos: 0.%d\n" RESET,i,media);
-  		}    
+		  printf("Imagem grande:\n");    	  
+    	  teste("demo.jpg", (yyvsp[0].fval));
+    	  
+    
     }
-#line 1440 "y.tab.c" /* yacc.c:1646  */
+#line 1390 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1444 "y.tab.c" /* yacc.c:1646  */
+#line 1394 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1668,7 +1618,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 178 "./src/imageprocessing.y" /* yacc.c:1906  */
+#line 128 "./src/imageprocessing.y" /* yacc.c:1906  */
 
 
 void yyerror(char *s) {
@@ -1682,8 +1632,8 @@ int main() {
   printf("-p n para n processos\n");
   printf("-l para varrer a imagem por linhs\n");
   printf("-c para varrer a imagem por colunas\n");
-  printf("EXEMPLO: teste.jpg=demo.jpg*2 -p 2 para utilizar dois processos\n");
-
+  printf("EXEMPLO: imagem.jpg=demo.jpg*2 -p 2 para utilizar dois processos\n");
+  printf("Para testar o desempenho de cada caso digite teste\n");
   FreeImage_Initialise(0);
   yyparse();
   return 0;

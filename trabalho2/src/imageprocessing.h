@@ -16,5 +16,5 @@ int brilho_linhas(imagem *I, float n);
 int brilho_multithreads(imagem *I, float n, int num_threads);
 int brilho_multiprocessos(imagem *I, float n, int num_processos);
 void valor_maximo(imagem *I);
-
+void teste(char *nome_do_arquivo, int n_de_testes);
 #endif

@@ -115,61 +115,11 @@ EXPRESSAO:
         valor_maximo(&I);
     }
 
-    | TESTE {
-		
-		imagem I = abrir_imagem("demo.jpg");
-		int media = 0;  		
-  		printf("Colunas:\n");
-  		for(int i=0; i<10;i++){
-    		media += brilho_colunas(&I,2);
-  		}
-		media=media/10; 		
-		if(media<100000) 		
- 			printf(CYAN "Média colunas: 0.0%d\n" RESET,media);
-		else
-			printf(CYAN "Média colunas: 0.%d\n" RESET,media);		
-  		
-  		
-  	   media = 0;
-  		I = abrir_imagem("demo.jpg");
-  		printf("Linhas:\n");
-  		for(int i=0; i<10;i++){
-    		media += brilho_linhas(&I,2);
-  		}
-  		media=media/10; 		
-		if(media<100000) 		
- 			printf(CYAN "Média linhas: 0.0%d\n" RESET,media);
-		else
-			printf(CYAN "Média linhas: 0.%d\n" RESET,media);
- 		
- 		
-  		I = abrir_imagem("demo.jpg");
-  		printf("Threads:\n");
-  		for(int i=1; i<9;i++){
-  			media=0;
-    		printf("Número de threads: %d\n", i);
-    		for(int j=0; j<10; j++)
-      		media += brilho_multithreads(&I,2,i);
-      	media=media/10; 		
-			if(media<100000) 			
- 				printf(CYAN "Média usando %d threads: 0.0%d\n" RESET,i,media);
- 			else
- 				printf(CYAN "Média usando %d threads: 0.%d\n" RESET,i,media);
-  		}
-  
-  		I = abrir_imagem("demo.jpg");
-  		printf("Processos:\n");
-  		for(int i=1; i<9;i++){
-  			media=0;
-    		printf("Número de processos: %d\n", i);
-    		for(int j=0; j<10; j++)
-      		media += brilho_multiprocessos(&I,2,i);
-        	media=media/10; 		
-			if(media<100000) 			
- 				printf(CYAN "Média usando %d processos: 0.0%d\n" RESET,i,media);
- 			else
- 				printf(CYAN "Média usando %d processos: 0.%d\n" RESET,i,media);
-  		}    
+    | TESTE FLOAT {
+		  printf("Imagem grande:\n");    	  
+    	  teste("demo.jpg", $2);
+    	  
+    
     }
     
     
@@ -188,8 +138,8 @@ int main() {
   printf("-p n para n processos\n");
   printf("-l para varrer a imagem por linhs\n");
   printf("-c para varrer a imagem por colunas\n");
-  printf("EXEMPLO: teste.jpg=demo.jpg*2 -p 2 para utilizar dois processos\n");
-
+  printf("EXEMPLO: imagem.jpg=demo.jpg*2 -p 2 para utilizar dois processos\n");
+  printf("Para testar o desempenho de cada caso digite teste\n");
   FreeImage_Initialise(0);
   yyparse();
   return 0;

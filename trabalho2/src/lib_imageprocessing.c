@@ -292,6 +292,62 @@ int brilho_multiprocessos(imagem *I, float n, int num_processos){
   return drt.tv_usec;
 }
 
+void teste(char *nome_do_arquivo, int n_de_testes){
+	imagem I = abrir_imagem(nome_do_arquivo);
+	int media = 0;  		
+  	printf("Colunas:\n");
+  	for(int i=0; i<n_de_testes;i++){
+   	media += brilho_colunas(&I,2);
+  	}
+	media=media/n_de_testes; 		
+	if(media<100000) 		
+ 		printf(GREEN "Média colunas: 0.0%d\n" RESET,media);
+	else
+		printf(GREEN "Média colunas: 0.%d\n" RESET,media);		
+  	
+  	
+  	media = 0;
+  	I = abrir_imagem(nome_do_arquivo);
+  	printf("Linhas:\n");
+  	for(int i=0; i<n_de_testes;i++){
+   	media += brilho_linhas(&I,2);
+  	}
+  	media=media/n_de_testes; 		
+	if(media<100000) 		
+ 		printf(GREEN "Média linhas: 0.0%d\n" RESET,media);
+	else
+		printf(GREEN "Média linhas: 0.%d\n" RESET,media);
+ 	
+ 	
+  	I = abrir_imagem(nome_do_arquivo);
+  	printf("Threads:\n");
+  	for(int i=1; i<9;i++){
+  		media=0;
+   	printf("Número de threads: %d\n", i);
+   	for(int j=0; j<n_de_testes; j++)
+     		media += brilho_multithreads(&I,2,i);
+     	media=media/n_de_testes; 		
+		if(media<100000) 			
+ 			printf(GREEN "Média usando %d threads: 0.0%d\n" RESET,i,media);
+ 		else
+ 			printf(GREEN "Média usando %d threads: 0.%d\n" RESET,i,media);
+  	}
+  
+  	I = abrir_imagem(nome_do_arquivo);
+  	printf("Processos:\n");
+  	for(int i=1; i<9;i++){
+  		media=0;
+   	printf("Número de processos: %d\n", i);
+   	for(int j=0; j<n_de_testes; j++)
+   		media += brilho_multiprocessos(&I,2,i);
+      media=media/n_de_testes; 		
+		if(media<100000) 			
+ 			printf(GREEN "Média usando %d processos: 0.0%d\n" RESET,i,media);
+ 		else
+ 			printf(GREEN "Média usando %d processos: 0.%d\n" RESET,i,media);
+  	}
+}
+
 void valor_maximo(imagem *I){
   printf("Calculando o valor máximo...\n");
   double max = 0;
@@ -309,3 +365,5 @@ void valor_maximo(imagem *I){
   }
   printf("O valor máximo é: %lf\n", norma);  
 }
+
+
