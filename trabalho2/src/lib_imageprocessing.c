@@ -94,7 +94,7 @@ void salvar_imagem(char *nome_do_arquivo, imagem *I) {
   FreeImage_Save(FIF_JPEG, bitmapOut, nome_do_arquivo, JPEG_DEFAULT);
 }
 
-int brilho_colunas(imagem *I, float n){ 
+float brilho_colunas(imagem *I, float n){ 
 
   struct timeval rt0, rt1, drt;
   
@@ -122,11 +122,12 @@ int brilho_colunas(imagem *I, float n){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  //printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
-  return drt.tv_usec;
+  float tempo = drt.tv_sec + 0.000001*drt.tv_usec;
+  //printf(GREEN "Tempo: %f segundos\n" RESET, tempo);
+  return tempo;
 }
 
-int brilho_linhas(imagem *I, float n){ 
+float brilho_linhas(imagem *I, float n){ 
 
   struct timeval rt0, rt1, drt;
   
@@ -155,11 +156,12 @@ int brilho_linhas(imagem *I, float n){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  //printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
-  return drt.tv_usec;
+  float tempo = drt.tv_sec + 0.000001*drt.tv_usec;
+  //printf(GREEN "Tempo: %f segundos\n" RESET, tempo);
+  return tempo;
 }
 
-int brilho_multithreads(imagem *I, float n, int num_threads){ 
+float brilho_multithreads(imagem *I, float n, int num_threads){ 
 
   struct timeval rt0, rt1, drt;
 
@@ -199,6 +201,8 @@ int brilho_multithreads(imagem *I, float n, int num_threads){
     pthread_create(&(t[i]), NULL, linhas, &(args[i])); 
   for(int i=0; i<num_threads; i++) 
     pthread_join(t[i], NULL);
+  
+  
   // int a=0, b=1;
   // pthread_create(&t[0], NULL, linhas, &a);  
   // pthread_create(&t[1], NULL, linhas, &b);
@@ -209,11 +213,12 @@ int brilho_multithreads(imagem *I, float n, int num_threads){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  //printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
-  return drt.tv_usec;
+  float tempo = drt.tv_sec + 0.000001*drt.tv_usec;
+  //printf(GREEN "Tempo: %f segundos\n" RESET, tempo);
+  return tempo;
 }
 
-int brilho_multiprocessos(imagem *I, float n, int num_processos){
+float brilho_multiprocessos(imagem *I, float n, int num_processos){
 
   int protection = PROT_READ | PROT_WRITE;
   int visibility = MAP_SHARED | MAP_ANONYMOUS;
@@ -253,7 +258,7 @@ int brilho_multiprocessos(imagem *I, float n, int num_processos){
   for (int i=0; i<num_processos; i++){
     pids[i] = fork();
     if (pids[i] < 0){
-      printf("Erro ao fazer fork\n");
+      printf("ERRO\n");
       exit(EXIT_FAILURE);
     }else if (pids[i] == 0){ //Processo filho
       linhas(i);            
@@ -288,22 +293,20 @@ int brilho_multiprocessos(imagem *I, float n, int num_processos){
   gettimeofday(&rt1, NULL);
     
   timersub(&rt1, &rt0, &drt);  
-  //printf(GREEN "Tempo: %ld.%06ld segundos\n" RESET, drt.tv_sec, drt.tv_usec);
-  return drt.tv_usec;
+  float tempo = drt.tv_sec + 0.000001*drt.tv_usec;
+  //printf(GREEN "Tempo: %f segundos\n" RESET, tempo);
+  return tempo;
 }
 
 void teste(char *nome_do_arquivo, int n_de_testes){
 	imagem I = abrir_imagem(nome_do_arquivo);
-	int media = 0;  		
+	float media = 0;  		
   	printf("Colunas:\n");
   	for(int i=0; i<n_de_testes;i++){
    	media += brilho_colunas(&I,2);
   	}
 	media=media/n_de_testes; 		
-	if(media<100000) 		
- 		printf(GREEN "Média colunas: 0.0%d\n" RESET,media);
-	else
-		printf(GREEN "Média colunas: 0.%d\n" RESET,media);		
+	printf(GREEN "Média colunas: %f\n" RESET,media);		
   	
   	
   	media = 0;
@@ -313,10 +316,7 @@ void teste(char *nome_do_arquivo, int n_de_testes){
    	media += brilho_linhas(&I,2);
   	}
   	media=media/n_de_testes; 		
-	if(media<100000) 		
- 		printf(GREEN "Média linhas: 0.0%d\n" RESET,media);
-	else
-		printf(GREEN "Média linhas: 0.%d\n" RESET,media);
+	printf(GREEN "Média linhas: %f\n" RESET,media);
  	
  	
   	I = abrir_imagem(nome_do_arquivo);
@@ -327,10 +327,7 @@ void teste(char *nome_do_arquivo, int n_de_testes){
    	for(int j=0; j<n_de_testes; j++)
      		media += brilho_multithreads(&I,2,i);
      	media=media/n_de_testes; 		
-		if(media<100000) 			
- 			printf(GREEN "Média usando %d threads: 0.0%d\n" RESET,i,media);
- 		else
- 			printf(GREEN "Média usando %d threads: 0.%d\n" RESET,i,media);
+	printf(GREEN "Média usando %d threads: %f\n" RESET,i,media);
   	}
   
   	I = abrir_imagem(nome_do_arquivo);
@@ -341,10 +338,7 @@ void teste(char *nome_do_arquivo, int n_de_testes){
    	for(int j=0; j<n_de_testes; j++)
    		media += brilho_multiprocessos(&I,2,i);
       media=media/n_de_testes; 		
-		if(media<100000) 			
- 			printf(GREEN "Média usando %d processos: 0.0%d\n" RESET,i,media);
- 		else
- 			printf(GREEN "Média usando %d processos: 0.%d\n" RESET,i,media);
+	printf(GREEN "Média usando %d processos: %f\n" RESET,i,media);
   	}
 }
 
